@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Autentificare — Jurnal{% endblock %}
+{% block content %}
+<div class="login-box">
+  <h1>Jurnal</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="username">Utilizator</label>
+    <input type="text" id="username" name="username" required autofocus
+           autocomplete="username" autocapitalize="none">
+    <label for="password">Parolă</label>
+    <input type="password" id="password" name="password" required
+           autocomplete="current-password">
+    <button type="submit" class="btn btn-primary btn-block">Intră</button>
+  </form>
+</div>
+{% endblock %}

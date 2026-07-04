@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Căutare — Jurnal{% endblock %}
+
+{% block content %}
+<h1>Căutare</h1>
+<form method="get" action="{{ url_for('search.search') }}" class="search-form">
+  <input type="search" name="q" value="{{ q }}" placeholder="Caută în jurnal…"
+         autofocus autocomplete="off">
+  <button type="submit" class="btn btn-primary">Caută</button>
+</form>
+
+{% if q %}
+  {% if results %}
+    <p class="muted">{{ results|length }} rezultat{{ 'e' if results|length != 1 }} pentru „{{ q }}"</p>
+    {% for r in results %}
+    <a class="card search-result" href="{{ url_for('entries.detail', date_str=r.entry.entry_date.isoformat()) }}">
+      <div class="entry-card-date">{{ r.entry.entry_date|data_lunga }}</div>
+      {% if r.entry.title %}<div class="entry-card-title">{{ r.entry.title }}</div>{% endif %}
+      <p class="search-snippet">{{ r.snippet }}</p>
+    </a>
+    {% endfor %}
+  {% else %}
+    <p class="muted">Niciun rezultat pentru „{{ q }}".</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

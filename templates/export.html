@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Export PDF — Jurnal{% endblock %}
+
+{% block content %}
+<h1>Export PDF</h1>
+<p class="muted">Alege intervalul de exportat. Generarea poate dura zeci de secunde
+   pentru intervale mari (pozele se descarcă din R2 la generare) — pentru „tot jurnalul"
+   e de preferat exportul pe ani.</p>
+
+<div class="export-presets">
+  <button type="button" class="btn" data-preset="luna">Luna curentă</button>
+  <button type="button" class="btn" data-preset="an">Anul curent</button>
+  <button type="button" class="btn" data-preset="tot">Tot jurnalul</button>
+</div>
+
+<form method="post" class="export-form" id="export-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="start_date">De la</label>
+  <input type="date" id="start_date" name="start_date" required>
+  <label for="end_date">Până la</label>
+  <input type="date" id="end_date" name="end_date" required>
+  <button type="submit" class="btn btn-primary" id="export-btn">Generează PDF</button>
+  <p class="muted" id="export-wait" hidden>Se generează PDF-ul, te rog așteaptă…</p>
+</form>
+
+<script>
+(function () {
+  const start = document.getElementById('start_date');
+  const end = document.getElementById('end_date');
+  const azi = new Date();
+  const iso = d => d.toISOString().slice(0, 10);
+
+  document.querySelectorAll('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const an = azi.getFullYear();
+      if (btn.dataset.preset === 'luna') {
+        start.value = iso(new Date(Date.UTC(an, azi.getMonth(), 1)));
+        end.value = iso(new Date(Date.UTC(an, azi.getMonth() + 1, 0)));
+      } else if (btn.dataset.preset === 'an') {
+        start.value = an + '-01-01';
+        end.value = an + '-12-31';
+      } else {
+        start.value = '2000-01-01';
+        end.value = iso(azi);
+      }
+    });
+  });
+
+  const form = document.getElementById('export-form');
+  form.addEventListener('submit', () => {
+    document.getElementById('export-wait').hidden = false;
+    const btn = document.getElementById('export-btn');
+    btn.disabled = true;
+    // Descărcarea nu declanșează navigare, deci reactivăm butonul după un timp.
+    setTimeout(() => { btn.disabled = false; document.getElementById('export-wait').hidden = true; }, 60000);
+  });
+})();
+</script>
+{% endblock %}

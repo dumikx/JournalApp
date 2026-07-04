@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ entry.entry_date|data_lunga }} — Jurnal{% endblock %}
+
+{% block content %}
+<article class="entry">
+  <header class="entry-header">
+    <h1 class="entry-date">{{ entry.entry_date|data_lunga }}</h1>
+    {% if entry.title %}<h2 class="entry-title">{{ entry.title }}</h2>{% endif %}
+    <div class="entry-actions">
+      <a class="btn" href="{{ url_for('entries.edit', date_str=entry.entry_date.isoformat()) }}">Editează</a>
+      <form method="post"
+            action="{{ url_for('entries.delete', date_str=entry.entry_date.isoformat()) }}"
+            class="inline-form"
+            onsubmit="return confirm('Ștergi definitiv această intrare și pozele ei?');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-danger">Șterge</button>
+      </form>
+    </div>
+  </header>
+
+  <div class="entry-body">{{ entry.body }}</div>
+
+  {% if photos %}
+  <div class="gallery" id="gallery">
+    {% for photo in photos %}
+    <button type="button" class="gallery-item"
+            data-index="{{ loop.index0 }}"
+            data-display="{{ photo.display }}"
+            data-original="{{ photo.original }}">
+      <img src="{{ photo.display }}" alt="" loading="lazy">
+    </button>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <nav class="entry-nav">
+    {% if prev_entry %}
+      <a href="{{ url_for('entries.detail', date_str=prev_entry.entry_date.isoformat()) }}">
+        ← {{ prev_entry.entry_date|data_scurta }}
+      </a>
+    {% else %}<span></span>{% endif %}
+    {% if next_entry %}
+      <a href="{{ url_for('entries.detail', date_str=next_entry.entry_date.isoformat()) }}">
+        {{ next_entry.entry_date|data_scurta }} →
+      </a>
+    {% else %}<span></span>{% endif %}
+  </nav>
+</article>
+
+{% if photos %}
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lightbox-close" aria-label="Închide">×</button>
+  <button type="button" class="lightbox-prev" aria-label="Anterioara">‹</button>
+  <img id="lightbox-img" src="" alt="">
+  <button type="button" class="lightbox-next" aria-label="Următoarea">›</button>
+  <a class="lightbox-download btn" id="lightbox-download" href="" download>Descarcă originalul</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if photos %}
+<script src="{{ url_for('static', filename='js/lightbox.js') }}"></script>
+{% endif %}
+{% endblock %}

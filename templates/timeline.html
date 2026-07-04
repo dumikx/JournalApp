@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Jurnal{% endblock %}
+{% block container_class %}with-sidebar{% endblock %}
+
+{% macro archive_list() %}
+  <ul class="archive-years">
+    {% for year, months in archive.items() %}
+    <li>
+      <span class="archive-year">{{ year }}</span>
+      <ul class="archive-months">
+        {% for month, count in months %}
+        <li>
+          <a href="{{ url_for('entries.index', month='%04d-%02d'|format(year, month)) }}">
+            {{ luna_an(year, month).split(' ')[0] }} <span class="archive-count">{{ count }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+{% block content %}
+<div class="timeline-layout">
+  <div class="timeline-main">
+    {% if not has_entries %}
+      <div class="empty-state">
+        <p>Jurnalul e gol deocamdată.</p>
+        <a class="btn btn-primary" href="{{ url_for('entries.today') }}">Scrie despre azi</a>
+      </div>
+    {% else %}
+      <details class="archive-mobile">
+        <summary>Arhivă</summary>
+        {{ archive_list() }}
+      </details>
+
+      <div id="timeline">
+        {% for section in month_sections %}
+          {% include "_month.html" %}
+        {% endfor %}
+      </div>
+
+      <div id="sentinel"
+           {% if next_cursor %}data-next="{{ next_cursor }}"{% endif %}
+           data-url="{{ url_for('entries.timeline_partial') }}">
+        <span class="loading-text" hidden>Se încarcă…</span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if has_entries %}
+  <aside class="archive-sidebar">
+    <h3>Arhivă</h3>
+    {{ archive_list() }}
+  </aside>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}

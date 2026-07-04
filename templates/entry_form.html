@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{% if entry %}Editare{% else %}Intrare nouă{% endif %} — Jurnal{% endblock %}
+
+{% block content %}
+<h1>{% if entry %}Editare — {{ entry.entry_date|data_lunga }}{% else %}Intrare nouă{% endif %}</h1>
+
+<form method="post" class="entry-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <label for="entry_date">Data</label>
+  <input type="date" id="entry_date" name="entry_date" required
+         value="{{ form_date.isoformat() }}">
+
+  <label for="title">Titlu <span class="muted">(opțional)</span></label>
+  <input type="text" id="title" name="title" maxlength="200" value="{{ form_title }}">
+
+  <label for="body">Text</label>
+  <textarea id="body" name="body" rows="14" required
+            placeholder="Cum a fost ziua?">{{ form_body }}</textarea>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Salvează</button>
+    {% if entry %}
+      <a class="btn" href="{{ url_for('entries.detail', date_str=entry.entry_date.isoformat()) }}">Renunță</a>
+    {% else %}
+      <a class="btn" href="{{ url_for('entries.index') }}">Renunță</a>
+    {% endif %}
+  </div>
+</form>
+
+{% if entry %}
+<section class="photo-manager"
+         id="photo-manager"
+         data-entry-id="{{ entry.id }}"
+         data-max-photos="{{ config.MAX_PHOTOS_PER_ENTRY }}"
+         data-max-size="{{ config.MAX_PHOTO_SIZE }}">
+  <h2>Poze</h2>
+
+  <ul class="photo-list" id="photo-list">
+    {% for photo in photos %}
+    <li class="photo-item" data-photo-id="{{ photo.id }}">
+      <img src="{{ photo.display }}" alt="">
+      <div class="photo-item-actions">
+        <button type="button" class="btn-icon photo-up" title="Mută sus">↑</button>
+        <button type="button" class="btn-icon photo-down" title="Mută jos">↓</button>
+        <button type="button" class="btn-icon photo-delete" title="Șterge">✕</button>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <label class="upload-label btn" for="photo-input">Adaugă poze</label>
+  <input type="file" id="photo-input" accept="image/*" multiple hidden>
+  <p class="muted">Max {{ config.MAX_PHOTOS_PER_ENTRY }} poze per intrare, 25MB per fișier.
+     Pozele se încarcă direct în R2.</p>
+
+  <ul class="upload-queue" id="upload-queue"></ul>
+</section>
+{% else %}
+<p class="muted">Pozele se pot adăuga după salvarea intrării.</p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if entry %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endif %}
+{% endblock %}

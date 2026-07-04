@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>Jurnal {{ start.isoformat() }} — {{ end.isoformat() }}</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2.2cm 1.8cm;
+    @bottom-center { content: counter(page); font-size: 9pt; color: #888; }
+  }
+  body {
+    font-family: "DejaVu Serif", Georgia, serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: #1a1a1a;
+  }
+  .cover {
+    text-align: center;
+    margin-top: 8cm;
+  }
+  .cover h1 { font-size: 26pt; margin-bottom: 0.4cm; }
+  .cover p { color: #666; }
+  article { page-break-before: always; }
+  h2.entry-date {
+    font-size: 15pt;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.15cm;
+    margin-bottom: 0.15cm;
+  }
+  h3.entry-title { font-size: 12.5pt; margin: 0.1cm 0 0.35cm; color: #444; }
+  .body { white-space: pre-wrap; }
+  .photos {
+    margin-top: 0.5cm;
+  }
+  .photos img {
+    width: 47%;
+    margin: 0 1% 0.3cm 0;
+    display: inline-block;
+    vertical-align: top;
+  }
+</style>
+</head>
+<body>
+<div class="cover">
+  <h1>Jurnal</h1>
+  <p>{{ start|data_lunga }} — {{ end|data_lunga }}</p>
+  <p>Generat la {{ generated|data_lunga }}</p>
+</div>
+
+{% for section in sections %}
+<article>
+  <h2 class="entry-date">{{ section.entry.entry_date|data_lunga }}</h2>
+  {% if section.entry.title %}<h3 class="entry-title">{{ section.entry.title }}</h3>{% endif %}
+  <div class="body">{{ section.entry.body }}</div>
+  {% if section.photo_urls %}
+  <div class="photos">
+    {% for url in section.photo_urls %}
+      <img src="{{ url }}" alt="">
+    {% endfor %}
+  </div>
+  {% endif %}
+</article>
+{% endfor %}
+</body>
+</html>

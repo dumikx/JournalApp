@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python --version)",
+      "PowerShell(docker --version)",
+      "PowerShell(docker info --format '{{.ServerVersion}}')",
+      "PowerShell($env:PYTHONIOENCODING='utf-8'; C:\\\\JournalApp\\\\.venv\\\\Scripts\\\\python.exe \"C:\\\\Users\\\\dumaa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--JournalApp\\\\510d4d07-e447-44cb-9a47-8628d736de00\\\\scratchpad\\\\smoke_test.py\" | Select-Object -Last 1; C:\\\\JournalApp\\\\.venv\\\\Scripts\\\\python.exe \"C:\\\\Users\\\\dumaa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--JournalApp\\\\510d4d07-e447-44cb-9a47-8628d736de00\\\\scratchpad\\\\render_test.py\" | Select-Object -Last 1)"
+    ]
+  }
+}

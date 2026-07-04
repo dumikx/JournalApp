@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}Jurnal{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<header class="topbar">
+  <nav class="topbar-inner">
+    <a class="brand" href="{{ url_for('entries.index') }}">Jurnal</a>
+    <div class="nav-links">
+      <a class="btn btn-primary" href="{{ url_for('entries.today') }}">Scrie despre azi</a>
+      <a href="{{ url_for('search.search') }}" title="Caută">Caută</a>
+      <a href="{{ url_for('export.export') }}" title="Export PDF">Export</a>
+      <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn-link">Ieșire</button>
+      </form>
+    </div>
+  </nav>
+</header>
+{% endif %}
+
+<main class="container {% block container_class %}{% endblock %}">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flashes">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

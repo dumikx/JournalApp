@@ -1,0 +1,20 @@
+<section class="month-section" id="luna-{{ '%04d-%02d'|format(section.year, section.month) }}">
+  <h2 class="month-header">{{ luna_an(section.year, section.month) }}</h2>
+  {% for entry in section.entries %}
+  <a class="card entry-card" href="{{ url_for('entries.detail', date_str=entry.entry_date.isoformat()) }}">
+    <div class="entry-card-date">{{ entry.entry_date|data_scurta }}</div>
+    {% if entry.title %}<div class="entry-card-title">{{ entry.title }}</div>{% endif %}
+    <p class="entry-card-preview">{{ entry.body|truncate(200, True, '…') }}</p>
+    {% if entry.photos %}
+    <div class="entry-card-thumbs">
+      {% for photo in entry.photos[:4] %}
+        <img src="{{ display_url(photo) }}" alt="" loading="lazy">
+      {% endfor %}
+      {% if entry.photos|length > 4 %}
+        <span class="thumbs-more">+{{ entry.photos|length - 4 }}</span>
+      {% endif %}
+    </div>
+    {% endif %}
+  </a>
+  {% endfor %}
+</section>
