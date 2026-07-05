@@ -21,6 +21,7 @@
     <a class="brand" href="{{ url_for('entries.index') }}">Jurnal</a>
     <div class="nav-links">
       <a class="btn btn-primary" href="{{ url_for('entries.new') }}">Scrie</a>
+      <a href="{{ url_for('thoughts.index') }}" title="Gânduri">Gânduri</a>
       <a href="{{ url_for('search.search') }}" title="Caută">Caută</a>
       <a href="{{ url_for('export.export') }}" title="Export PDF">Export</a>
       <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">

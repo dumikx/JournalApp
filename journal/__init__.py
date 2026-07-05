@@ -5,7 +5,12 @@ from flask import Flask
 from markupsafe import Markup, escape
 
 from config import Config
-from .dates_ro import format_date_long, format_date_short, format_month_year
+from .dates_ro import (
+    format_date_long,
+    format_date_short,
+    format_datetime,
+    format_month_year,
+)
 from .extensions import csrf, db, limiter, login_manager, migrate
 
 
@@ -35,15 +40,18 @@ def create_app(config_class=Config):
     from .photos_api import bp as photos_bp
     from .search import bp as search_bp
     from .export import bp as export_bp
+    from .thoughts import bp as thoughts_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(entries_bp)
     app.register_blueprint(photos_bp)
     app.register_blueprint(search_bp)
     app.register_blueprint(export_bp)
+    app.register_blueprint(thoughts_bp)
 
     app.jinja_env.filters["data_lunga"] = format_date_long
     app.jinja_env.filters["data_scurta"] = format_date_short
+    app.jinja_env.filters["data_ora"] = format_datetime
     app.jinja_env.globals["luna_an"] = format_month_year
 
     @app.template_filter("nl2br")

@@ -37,6 +37,25 @@ class Entry(db.Model):
         return f"<Entry {self.entry_date}>"
 
 
+class Thought(db.Model):
+    """Gând liber: fără dată logică (doar timestamp), cu temă opțională."""
+
+    __tablename__ = "thoughts"
+
+    id = db.Column(db.Integer, primary_key=True)
+    topic = db.Column(db.String(100))
+    body = db.Column(db.Text, nullable=False)
+    created_at = db.Column(
+        db.DateTime(timezone=True), server_default=func.now(), index=True
+    )
+    updated_at = db.Column(
+        db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    def __repr__(self):
+        return f"<Thought {self.id}>"
+
+
 class Photo(db.Model):
     __tablename__ = "photos"
 

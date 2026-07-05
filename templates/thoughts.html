@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Gânduri — Jurnal{% endblock %}
+
+{% block content %}
+<h1>Gânduri</h1>
+
+<form method="post" action="{{ url_for('thoughts.create') }}" class="thought-quick-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <textarea name="body" rows="3" required placeholder="Ce-ți trece prin minte?"></textarea>
+  <div class="thought-quick-row">
+    <input type="text" name="topic" maxlength="100" placeholder="Temă (opțional)"
+           list="topics-list">
+    <datalist id="topics-list">
+      {% for topic, _ in topics %}<option value="{{ topic }}">{% endfor %}
+    </datalist>
+    <button type="submit" class="btn btn-primary">Adaugă</button>
+  </div>
+</form>
+
+{% if topics %}
+<div class="topic-chips">
+  <a class="chip {% if not active_topic %}chip-active{% endif %}"
+     href="{{ url_for('thoughts.index') }}">Toate</a>
+  {% for topic, count in topics %}
+  <a class="chip {% if active_topic == topic %}chip-active{% endif %}"
+     href="{{ url_for('thoughts.index', tema=topic) }}">{{ topic }} <span class="chip-count">{{ count }}</span></a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if thoughts %}
+  {% for thought in thoughts %}
+  <div class="card thought-card">
+    <div class="thought-body">{{ thought.body }}</div>
+    <div class="thought-meta">
+      {% if thought.topic %}
+        <a class="chip chip-small" href="{{ url_for('thoughts.index', tema=thought.topic) }}">{{ thought.topic }}</a>
+      {% endif %}
+      <span class="muted">{{ thought.created_at|data_ora }}</span>
+      <span class="thought-actions">
+        <a href="{{ url_for('thoughts.edit', thought_id=thought.id) }}">Editează</a>
+        <form method="post" action="{{ url_for('thoughts.delete', thought_id=thought.id) }}"
+              class="inline-form" onsubmit="return confirm('Ștergi acest gând?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-link btn-link-danger">Șterge</button>
+        </form>
+      </span>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <p class="muted">
+    {% if active_topic %}Niciun gând pe tema „{{ active_topic }}".
+    {% else %}Niciun gând notat încă.{% endif %}
+  </p>
+{% endif %}
+{% endblock %}

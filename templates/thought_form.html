@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Editare gând — Jurnal{% endblock %}
+
+{% block content %}
+<h1>Editare gând</h1>
+<p class="muted">Notat la {{ thought.created_at|data_ora }}</p>
+
+<form method="post" class="entry-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <label for="topic">Temă <span class="muted">(opțional)</span></label>
+  <input type="text" id="topic" name="topic" maxlength="100" value="{{ thought.topic or '' }}">
+
+  <label for="body">Gând</label>
+  <textarea id="body" name="body" rows="8" required>{{ thought.body }}</textarea>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Salvează</button>
+    <a class="btn" href="{{ url_for('thoughts.index') }}">Renunță</a>
+  </div>
+</form>
+{% endblock %}

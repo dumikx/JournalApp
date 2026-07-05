@@ -10,3 +10,4 @@ psycopg2-binary>=2.9
 gunicorn>=21.2
 WeasyPrint>=61
 python-dotenv>=1.0
+tzdata>=2024.1
