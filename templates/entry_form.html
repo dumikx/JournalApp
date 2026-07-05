@@ -4,6 +4,14 @@
 {% block content %}
 <h1>{% if entry %}Editare — {{ entry.entry_date|data_lunga }}{% else %}Intrare nouă{% endif %}</h1>
 
+{% if existing_url %}
+<div class="flash flash-error">
+  Există deja o intrare pentru data aleasă.
+  Alege altă dată sau <a href="{{ existing_url }}">deschide intrarea existentă</a>
+  (textul scris aici nu se transferă acolo).
+</div>
+{% endif %}
+
 <form method="post" class="entry-form">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 

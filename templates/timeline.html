@@ -27,7 +27,7 @@
     {% if not has_entries %}
       <div class="empty-state">
         <p>Jurnalul e gol deocamdată.</p>
-        <a class="btn btn-primary" href="{{ url_for('entries.today') }}">Scrie despre azi</a>
+        <a class="btn btn-primary" href="{{ url_for('entries.new') }}">Scrie prima intrare</a>
       </div>
     {% else %}
       <details class="archive-mobile">

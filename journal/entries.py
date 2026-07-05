@@ -132,16 +132,6 @@ def timeline_partial():
     return jsonify({"html": html, "next": next_month_cursor(months, year, month)})
 
 
-@bp.route("/today")
-@login_required
-def today():
-    """Butonul «Scrie despre azi»."""
-    entry = Entry.query.filter_by(entry_date=date.today()).first()
-    if entry:
-        return redirect(url_for("entries.edit", date_str=entry.entry_date.isoformat()))
-    return redirect(url_for("entries.new"))
-
-
 @bp.route("/entry/new", methods=["GET", "POST"])
 @login_required
 def new():
@@ -157,11 +147,14 @@ def new():
             )
         existing = Entry.query.filter_by(entry_date=entry_date).first()
         if existing:
-            flash(
-                "Există deja o intrare pentru această zi — o poți edita aici.", "info"
-            )
-            return redirect(
-                url_for("entries.edit", date_str=existing.entry_date.isoformat())
+            # Nu redirectăm: textul tastat s-ar pierde. Rămânem în formular
+            # și oferim un link spre intrarea existentă.
+            return render_template(
+                "entry_form.html", entry=None, form_date=entry_date,
+                form_title=title or "", form_body=body,
+                existing_url=url_for(
+                    "entries.edit", date_str=existing.entry_date.isoformat()
+                ),
             )
         entry = Entry(entry_date=entry_date, title=title, body=body)
         db.session.add(entry)
