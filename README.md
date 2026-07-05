@@ -58,9 +58,10 @@ flask --app app run --debug
 4. **Migrații:** setează în Railway *Pre-deploy command*:
    `flask --app app db upgrade`
    (alternativ, schimbă comanda de start în `flask --app app db upgrade && gunicorn app:app`).
-5. **WeasyPrint:** `nixpacks.toml` din repo instalează pachetele apt necesare
-   (pango, harfbuzz, fonturi). Dacă folosești Dockerfile în loc de nixpacks,
-   instalează `libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 fonts-dejavu-core`.
+5. **WeasyPrint:** pachetele de sistem (pango, harfbuzz, fonturi) sunt declarate
+   în `railpack.json` (builderul implicit Railpack) și în `nixpacks.toml`
+   (builderul Nixpacks) — oricare ar fi activ, se instalează. Cu Dockerfile:
+   `libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0 fonts-dejavu-core`.
 6. Start command: din `Procfile` — `web: gunicorn app:app`.
 
 ## Setup Cloudflare R2
