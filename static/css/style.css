@@ -256,7 +256,7 @@ textarea { resize: vertical; line-height: 1.6; }
 .entry-header { margin-bottom: 1rem; }
 .entry-date { margin-bottom: 0.2rem; }
 .entry-title { color: var(--text-muted); font-weight: 600; margin-top: 0; }
-.entry-actions { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+.entry-actions { display: flex; gap: 0.5rem; margin-top: 2.2rem; }
 
 .entry-body {
   white-space: pre-wrap;
@@ -417,6 +417,13 @@ textarea { resize: vertical; line-height: 1.6; }
 
 .thought-card:hover { border-color: var(--border); }
 .thought-body { white-space: pre-wrap; }
+.thought-body.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.thought-toggle { margin-top: 0.3rem; font-size: 0.88rem; }
 .thought-meta {
   display: flex;
   align-items: center;

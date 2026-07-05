@@ -55,3 +55,25 @@
   </p>
 {% endif %}
 {% endblock %}
+
+{% block scripts %}
+<script>
+// Gândurile lungi apar restrânse la câteva rânduri, cu buton de expandare.
+document.querySelectorAll('.thought-body').forEach(el => {
+  el.classList.add('clamped');
+  if (el.scrollHeight <= el.clientHeight + 2) {
+    el.classList.remove('clamped');
+    return;
+  }
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn-link thought-toggle';
+  btn.textContent = 'Citește tot';
+  btn.addEventListener('click', () => {
+    const restrans = el.classList.toggle('clamped');
+    btn.textContent = restrans ? 'Citește tot' : 'Restrânge';
+  });
+  el.after(btn);
+});
+</script>
+{% endblock %}

@@ -6,16 +6,6 @@
   <header class="entry-header">
     <h1 class="entry-date">{{ entry.entry_date|data_lunga }}</h1>
     {% if entry.title %}<h2 class="entry-title">{{ entry.title }}</h2>{% endif %}
-    <div class="entry-actions">
-      <a class="btn" href="{{ url_for('entries.edit', date_str=entry.entry_date.isoformat()) }}">Editează</a>
-      <form method="post"
-            action="{{ url_for('entries.delete', date_str=entry.entry_date.isoformat()) }}"
-            class="inline-form"
-            onsubmit="return confirm('Ștergi definitiv această intrare și pozele ei?');">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-danger">Șterge</button>
-      </form>
-    </div>
   </header>
 
   <div class="entry-body">{{ entry.body }}</div>
@@ -32,6 +22,17 @@
     {% endfor %}
   </div>
   {% endif %}
+
+  <div class="entry-actions">
+    <a class="btn" href="{{ url_for('entries.edit', date_str=entry.entry_date.isoformat()) }}">Editează</a>
+    <form method="post"
+          action="{{ url_for('entries.delete', date_str=entry.entry_date.isoformat()) }}"
+          class="inline-form"
+          onsubmit="return confirm('Ștergi definitiv această intrare și pozele ei?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-danger">Șterge</button>
+    </form>
+  </div>
 
   <nav class="entry-nav">
     {% if prev_entry %}
